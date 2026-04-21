@@ -1,4 +1,16 @@
 const express = require("express");
+// Root route (API check)
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Finance Dashboard API is running ",
+  });
+});
+
+// Health check route
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
 const cors = require("cors");
 const dotenv = require("dotenv");
 const fs = require("fs");
