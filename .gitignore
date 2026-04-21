@@ -1,0 +1,12 @@
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+backend/uploads/
+.git.onedrive-broken
+gh-login.txt
+gh-login.out.txt
+gh-login.err.txt
+*.env
+!.env.example
+build/
+dist/

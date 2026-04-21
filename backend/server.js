@@ -1,0 +1,102 @@
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const fs = require("fs");
+const path = require("path");
+const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
+const accountRoutes = require("./routes/accountRoutes");
+const goalRoutes = require("./routes/goalRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const { notFound, errorHandler } = require("./middleware/errorHandler");
+
+dotenv.config();
+
+const app = express();
+const uploadsDir = path.join(__dirname, "uploads");
+const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "http://localhost:3000")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      const error = new Error("CORS policy does not allow access from this origin");
+      error.statusCode = 403;
+      return callback(error);
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true
+  })
+);
+app.use(express.json());
+
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api/accounts", accountRoutes);
+app.use("/api/goals", goalRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = Number(process.env.PORT) || 5000;
+let server;
+
+const startServer = async () => {
+  await connectDB();
+
+  server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+const shutdown = (signal) => {
+  console.log(`${signal} received. Shutting down gracefully.`);
+
+  if (server) {
+    server.close(() => {
+      console.log("HTTP server closed.");
+      process.exit(0);
+    });
+    return;
+  }
+
+  process.exit(0);
+};
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught exception:", error);
+  process.exit(1);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled rejection:", reason);
+
+  if (server) {
+    server.close(() => process.exit(1));
+    return;
+  }
+
+  process.exit(1);
+});
+
+startServer().catch((error) => {
+  console.error("Server startup failed:", error);
+  process.exit(1);
+});
