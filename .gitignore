@@ -6,7 +6,11 @@ backend/uploads/
 gh-login.txt
 gh-login.out.txt
 gh-login.err.txt
+backend/startup.stdout.log
+backend/startup.stderr.log
 *.env
 !.env.example
 build/
 dist/
+frontend/build/
+frontend/build-*/
