@@ -9,6 +9,12 @@ const asyncHandler = require("../middleware/asyncHandler");
 const { createTransactionFingerprint } = require("../utils/transactionFingerprint");
 
 const uploadsPath = path.join(__dirname, "..", "uploads");
+const requiredCsvHeaderGroups = [
+  ["date"],
+  ["amount"]
+];
+
+fs.mkdirSync(uploadsPath, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadsPath),
@@ -232,8 +238,29 @@ const importCsvTransactions = asyncHandler(async (req, res) => {
     throw error;
   }
 
+  const firstRowHeaders = Object.keys(parsedRows[0] || {}).map((header) =>
+    String(header || "").trim().toLowerCase()
+  );
+  const missingHeaders = requiredCsvHeaderGroups
+    .filter((group) => !group.some((header) => firstRowHeaders.includes(header)))
+    .flat();
+
+  if (missingHeaders.length > 0) {
+    const error = new Error(
+      `Invalid CSV headers. Please include: ${missingHeaders.join(", ")}.`
+    );
+    error.statusCode = 400;
+    error.errors = missingHeaders.map((header) => ({
+      message: `Missing required column: ${header}`
+    }));
+    throw error;
+  }
+
   if (rowErrors.length > 0) {
-    const error = new Error("CSV validation failed");
+    const firstRowError = rowErrors[0];
+    const error = new Error(
+      `CSV validation failed. Row ${firstRowError.row}: ${firstRowError.message}.`
+    );
     error.statusCode = 400;
     error.errors = rowErrors;
     throw error;

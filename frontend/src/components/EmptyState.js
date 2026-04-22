@@ -1,7 +1,7 @@
 const EmptyState = ({ title, description, action }) => {
   return (
-    <div className="rounded-[28px] border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center dark:border-slate-700 dark:bg-slate-900/40">
-      <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700 dark:bg-cyan-950/60 dark:text-cyan-300">
+    <div className="rounded-[28px] border border-dashed border-slate-300 bg-slate-50/90 px-6 py-8 text-center dark:border-slate-700 dark:bg-slate-900/60">
+      <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-100 text-2xl text-cyan-700 dark:bg-cyan-950/60 dark:text-cyan-300">
         ○
       </div>
       <h3 className="mt-4 text-lg font-semibold text-slate-950 dark:text-white">{title}</h3>
@@ -14,4 +14,3 @@ const EmptyState = ({ title, description, action }) => {
 };
 
 export default EmptyState;
-

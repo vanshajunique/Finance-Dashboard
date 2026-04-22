@@ -34,32 +34,18 @@ const iconMap = {
   )
 };
 
-const StatCard = ({ title, value, trendLabel, trendTone, iconKey, accentClass }) => {
+const StatCard = ({ title, value, helperText, iconKey, accentClass }) => {
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-950/70">
+    <div className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-950">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
-          <h2 className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">{value}</h2>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">{value}</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{helperText}</p>
         </div>
         <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl ${accentClass}`}>
           {iconMap[iconKey]}
         </div>
-      </div>
-
-      <div className="mt-5 flex items-center gap-2 text-sm">
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-1 font-medium ${
-            trendTone === "positive"
-              ? "bg-emerald-50 text-emerald-700"
-              : trendTone === "negative"
-                ? "bg-rose-50 text-rose-700"
-                : "bg-slate-100 text-slate-600"
-          }`}
-        >
-          {trendTone === "positive" ? "UP" : trendTone === "negative" ? "DOWN" : "INFO"} {trendLabel}
-        </span>
-        <span className="text-slate-400 dark:text-slate-500">vs recent activity</span>
       </div>
     </div>
   );
