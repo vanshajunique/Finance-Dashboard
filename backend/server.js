@@ -1,16 +1,4 @@
 const express = require("express");
-// Root route (API check)
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "success",
-    message: "Finance Dashboard API is running ",
-  });
-});
-
-// Health check route
-app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "OK" });
-});
 const cors = require("cors");
 const dotenv = require("dotenv");
 const fs = require("fs");
@@ -28,6 +16,7 @@ dotenv.config();
 const app = express();
 const uploadsDir = path.join(__dirname, "uploads");
 const isProduction = process.env.NODE_ENV === "production";
+const dbRetryDelayMs = Number(process.env.DB_RETRY_DELAY_MS || 5000);
 const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "http://localhost:3000")
   .split(",")
   .map((origin) => origin.trim())
@@ -55,8 +44,15 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Finance Dashboard API is running 🚀"
+  });
+});
+
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+  res.status(200).json({ status: "OK" });
 });
 
 app.use("/api/auth", authRoutes);
@@ -69,7 +65,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = Number(process.env.PORT) || 5000;
-const dbRetryDelayMs = Number(process.env.DB_RETRY_DELAY_MS || 5000);
 let server;
 
 const ensureDatabaseConnection = async () => {
