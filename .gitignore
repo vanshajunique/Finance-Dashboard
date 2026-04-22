@@ -8,6 +8,7 @@ gh-login.out.txt
 gh-login.err.txt
 backend/startup.stdout.log
 backend/startup.stderr.log
+import-smoke-*.csv
 *.env
 !.env.example
 build/
