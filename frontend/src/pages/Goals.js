@@ -28,13 +28,22 @@ const Goals = ({ user, onLogout }) => {
   }, []);
 
   const handleCreateGoal = async (payload) => {
-    await goalApi.create(payload);
-    addToast({
-      title: "Goal created",
-      description: "Your savings plan has been added.",
-      tone: "success"
-    });
-    await loadGoals();
+    try {
+      await goalApi.create(payload);
+      addToast({
+        title: "Goal created",
+        description: "Your savings plan has been added.",
+        tone: "success"
+      });
+      await loadGoals();
+    } catch (error) {
+      addToast({
+        title: "Failed to create goal",
+        description: error.response?.data?.message || "Please try again.",
+        tone: "error"
+      });
+      throw error;
+    }
   };
 
   const handleContributeToGoal = async (goalId, amount) => {
@@ -47,38 +56,43 @@ const Goals = ({ user, onLogout }) => {
       return;
     }
 
-    await goalApi.contribute(goalId, { amount });
-    addToast({
-      title: "Contribution added",
-      description: "Goal progress has been updated.",
-      tone: "success"
-    });
-    await loadGoals();
+    try {
+      await goalApi.contribute(goalId, { amount });
+      addToast({
+        title: "Contribution added",
+        description: "Goal progress has been updated.",
+        tone: "success"
+      });
+      await loadGoals();
+    } catch (error) {
+      addToast({
+        title: "Failed to update goal",
+        description: error.response?.data?.message || "Please try again.",
+        tone: "error"
+      });
+    }
   };
 
   const handleDeleteGoal = async (goalId) => {
-    await goalApi.remove(goalId);
-    addToast({
-      title: "Goal removed",
-      description: "The goal has been deleted.",
-      tone: "success"
-    });
-    await loadGoals();
+    try {
+      await goalApi.remove(goalId);
+      addToast({
+        title: "Goal removed",
+        description: "The goal has been deleted.",
+        tone: "success"
+      });
+      await loadGoals();
+    } catch (error) {
+      addToast({
+        title: "Failed to delete goal",
+        description: error.response?.data?.message || "Please try again.",
+        tone: "error"
+      });
+    }
   };
 
   return (
     <DashboardShell user={user} onLogout={onLogout}>
-      <section className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-600">Financial Goals</p>
-        <h1 className="mt-2 text-4xl font-semibold text-slate-950 dark:text-white">
-          Goal-Based Financial Planning
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
-          Build disciplined plans for travel, emergency savings, and major purchases with clear
-          progress tracking and monthly targets.
-        </p>
-      </section>
-
       {loading ? (
         <div className="space-y-4">
           <LoadingSkeleton className="h-20 w-full rounded-[28px]" />

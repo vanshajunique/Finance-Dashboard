@@ -1,14 +1,5 @@
 import { NavLink } from "react-router-dom";
-
-const navigationItems = [
-  { label: "Dashboard", path: "/" },
-  { label: "Accounts", path: null },
-  { label: "Transactions", path: null },
-  { label: "Budgets", path: null },
-  { label: "Analytics", path: "/analytics" },
-  { label: "Financial Goals", path: "/goals" },
-  { label: "Settings", path: null }
-];
+import { navigationItems } from "../config/navigation";
 
 const Sidebar = () => {
   return (
@@ -25,34 +16,22 @@ const Sidebar = () => {
         <ul className="space-y-2">
           {navigationItems.map((item, index) => (
             <li key={item.label}>
-              {item.path ? (
-                <NavLink
-                  to={item.path}
-                  end={item.path === "/"}
-                  className={({ isActive }) =>
-                    `flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${
-                      isActive
-                        ? "bg-cyan-500/15 text-cyan-300"
-                        : "text-slate-300 hover:bg-slate-900 hover:text-white"
-                    }`
-                  }
-                >
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-slate-200">
-                    {index + 1}
-                  </span>
-                  {item.label}
-                </NavLink>
-              ) : (
-                <button
-                  className="flex w-full cursor-default items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-500"
-                  type="button"
-                >
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-slate-500">
-                    {index + 1}
-                  </span>
-                  {item.label}
-                </button>
-              )}
+              <NavLink
+                to={item.path}
+                end
+                className={({ isActive }) =>
+                  `flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${
+                    isActive
+                      ? "bg-cyan-500/15 text-cyan-300"
+                      : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                  }`
+                }
+              >
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-slate-200">
+                  {index + 1}
+                </span>
+                {item.label}
+              </NavLink>
             </li>
           ))}
         </ul>

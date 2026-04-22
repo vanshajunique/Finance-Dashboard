@@ -1,7 +1,8 @@
 export const inrCurrencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
-  maximumFractionDigits: 2
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
 });
 
 export const compactInrFormatter = new Intl.NumberFormat("en-IN", {

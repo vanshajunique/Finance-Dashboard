@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import Accounts from "./pages/Accounts";
+import Analytics from "./pages/Analytics";
+import Budgets from "./pages/Budgets";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Analytics from "./pages/Analytics";
 import Goals from "./pages/Goals";
+import Settings from "./pages/Settings";
+import Transactions from "./pages/Transactions";
 import { authApi } from "./services/api";
 
 const ProtectedRoute = ({ isAuthenticated, children }) => {
@@ -76,24 +80,49 @@ function App() {
       <Route
         path="/login"
         element={
-          auth.token ? <Navigate to="/" replace /> : <Login onAuthSuccess={handleAuthSuccess} />
+          auth.token ? <Navigate to="/dashboard" replace /> : <Login onAuthSuccess={handleAuthSuccess} />
         }
       />
       <Route
         path="/register"
         element={
           auth.token ? (
-            <Navigate to="/" replace />
+            <Navigate to="/dashboard" replace />
           ) : (
             <Register onAuthSuccess={handleAuthSuccess} />
           )
         }
       />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <ProtectedRoute isAuthenticated={Boolean(auth.token)}>
             <Dashboard user={auth.user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accounts"
+        element={
+          <ProtectedRoute isAuthenticated={Boolean(auth.token)}>
+            <Accounts user={auth.user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/transactions"
+        element={
+          <ProtectedRoute isAuthenticated={Boolean(auth.token)}>
+            <Transactions user={auth.user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/budgets"
+        element={
+          <ProtectedRoute isAuthenticated={Boolean(auth.token)}>
+            <Budgets user={auth.user} onLogout={handleLogout} />
           </ProtectedRoute>
         }
       />
@@ -113,6 +142,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute isAuthenticated={Boolean(auth.token)}>
+            <Settings user={auth.user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to={auth.token ? "/dashboard" : "/login"} replace />} />
     </Routes>
   );
 }

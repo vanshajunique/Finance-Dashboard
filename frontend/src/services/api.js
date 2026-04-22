@@ -25,7 +25,7 @@ export const authApi = {
 };
 
 export const transactionApi = {
-  getAll: () => api.get("/transactions"),
+  getAll: (params = {}) => api.get("/transactions", { params }),
   create: (payload) => api.post("/transactions", payload),
   remove: (id) => api.delete(`/transactions/${id}`),
   importCsv: (formData) =>

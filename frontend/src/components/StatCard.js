@@ -22,8 +22,10 @@ const iconMap = {
   ),
   savings: (
     <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M12 3v18" />
-      <path d="M17 7.5c0-1.9-2.24-3.5-5-3.5s-5 1.6-5 3.5 2.24 3.5 5 3.5 5 1.6 5 3.5-2.24 3.5-5 3.5-5-1.6-5-3.5" />
+      <path d="M5 18.5h14" />
+      <path d="M7.5 14.5h2V8h-2z" />
+      <path d="M11 14.5h2V5.5h-2z" />
+      <path d="M14.5 14.5h2V10h-2z" />
     </svg>
   ),
   health: (

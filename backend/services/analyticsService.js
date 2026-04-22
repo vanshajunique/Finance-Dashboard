@@ -4,6 +4,14 @@ const Goal = require("../models/Goal");
 const Transaction = require("../models/Transaction");
 
 const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const currencyFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+});
+
+const formatCurrency = (value) => currencyFormatter.format(Number(value) || 0);
 
 const getMonthBounds = (date = new Date()) => {
   const start = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -31,7 +39,7 @@ const buildInsights = ({ categoryBreakdown, monthlyExpenses, budgets, totals }) 
       title: "Top Spending Category",
       icon: "wallet",
       message: topCategory
-        ? `${topCategory._id} is your highest spend category at $${topCategory.total.toFixed(2)} this month.`
+        ? `${topCategory._id} is your highest spend category at ${formatCurrency(topCategory.total)} this month.`
         : "No expense data available yet."
     },
     spendingChange: {
@@ -41,15 +49,15 @@ const buildInsights = ({ categoryBreakdown, monthlyExpenses, budgets, totals }) 
         monthlyExpenses.length < 2
           ? "Not enough monthly history yet to compare spending trends."
           : expenseDelta >= 0
-            ? `Spending is up by $${expenseDelta.toFixed(2)} compared to last month.`
-            : `Spending is down by $${Math.abs(expenseDelta).toFixed(2)} compared to last month.`
+            ? `Spending is up by ${formatCurrency(expenseDelta)} compared to last month.`
+            : `Spending is down by ${formatCurrency(Math.abs(expenseDelta))} compared to last month.`
     },
     budgetWarnings: {
       title: "Budget Warnings",
       icon: overBudget.length > 0 ? "alert" : "shield",
       message:
         overBudget.length > 0
-          ? overBudget.map((item) => `${item.category} exceeded budget by $${(item.spent - item.limit).toFixed(2)}.`)
+          ? overBudget.map((item) => `${item.category} exceeded budget by ${formatCurrency(item.spent - item.limit)}.`)
           : ["All tracked categories are currently within budget."]
     },
     savingsSuggestions: {
@@ -66,7 +74,7 @@ const buildInsights = ({ categoryBreakdown, monthlyExpenses, budgets, totals }) 
     cashflowForecast: {
       title: "Cashflow Forecast",
       icon: forecast >= 0 ? "forecast-up" : "forecast-down",
-      message: `If current income and expense patterns continue, projected next-month balance is $${forecast.toFixed(2)}.`
+      message: `If current income and expense patterns continue, projected next-month balance is ${formatCurrency(forecast)}.`
     }
   };
 };
